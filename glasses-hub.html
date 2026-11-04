@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Glasses Hub</title>
+<style>
+  :root { --bg:#0f1115; --card:#1a1d24; --text:#f2f4f8; --muted:#9aa3b2; --accent:#4f8cff; }
+  @media (prefers-color-scheme: light) {
+    :root { --bg:#f5f6f8; --card:#fff; --text:#14171c; --muted:#5d6674; --accent:#2563eb; }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font:16px/1.4 system-ui,sans-serif; padding:16px; }
+  h1 { font-size:1.4rem; margin:8px 0 4px; }
+  p.sub { color:var(--muted); margin:0 0 16px; font-size:.9rem; }
+  .primary { display:block; width:100%; padding:16px; border-radius:14px; background:var(--accent);
+    color:#fff; text-align:center; text-decoration:none; font-weight:600; font-size:1.05rem; margin-bottom:20px; }
+  h2 { font-size:.8rem; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); margin:20px 0 8px; }
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  button.cmd { background:var(--card); color:var(--text); border:1px solid rgba(128,128,128,.25);
+    border-radius:12px; padding:14px 10px; font:inherit; text-align:left; min-height:64px; }
+  button.cmd small { display:block; color:var(--muted); font-size:.75rem; margin-top:4px; }
+  button.cmd:active { transform:scale(.98); }
+  #toast { position:fixed; left:50%; bottom:24px; transform:translateX(-50%); background:var(--text);
+    color:var(--bg); padding:10px 16px; border-radius:20px; opacity:0; transition:opacity .2s; pointer-events:none; }
+  #toast.show { opacity:1; }
+  .note { color:var(--muted); font-size:.8rem; margin-top:24px; }
+</style>
+</head>
+<body>
+<h1>Glasses Hub</h1>
+<p class="sub">Quick launcher for your Ray-Ban Meta glasses.</p>
+
+<a class="primary" target="_blank" rel="noopener"
+   href="https://home.google.com/u/0/home/1-de833ee97658431af9c6b8bc40d151f39c5510f23f498b713a7b76aca789ee9e/devices">
+  Open Google Home devices
+</a>
+
+<h2>Capture</h2>
+<div class="grid">
+  <button class="cmd" data-say="Hey Meta, take a picture">Take a photo<small>Hey Meta, take a picture</small></button>
+  <button class="cmd" data-say="Hey Meta, record a video">Record video<small>Hey Meta, record a video</small></button>
+</div>
+
+<h2>Ask</h2>
+<div class="grid">
+  <button class="cmd" data-say="Hey Meta, look and tell me what this is">Identify<small>Hey Meta, look and tell me what this is</small></button>
+  <button class="cmd" data-say="Hey Meta, what's the weather today?">Weather<small>Hey Meta, what's the weather today?</small></button>
+</div>
+
+<h2>Media &amp; calls</h2>
+<div class="grid">
+  <button class="cmd" data-say="Hey Meta, play music">Play music<small>Hey Meta, play music</small></button>
+  <button class="cmd" data-say="Hey Meta, volume up">Volume up<small>Hey Meta, volume up</small></button>
+  <button class="cmd" data-say="Hey Meta, call ">Call<small>Hey Meta, call [name]</small></button>
+  <button class="cmd" data-say="Hey Meta, send a message to ">Message<small>Hey Meta, send a message to [name]</small></button>
+</div>
+
+<p class="note">Tap a command to copy it, then say it to your glasses. Meta doesn't offer a public web API for controlling the glasses directly, so this page can't send commands to them. Use the Meta AI app for settings and gallery.</p>
+
+<div id="toast">Copied</div>
+<script>
+  const toast = document.getElementById('toast');
+  document.querySelectorAll('button.cmd').forEach(b => {
+    b.addEventListener('click', async () => {
+      try { await navigator.clipboard.writeText(b.dataset.say); } catch (e) {}
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 1200);
+    });
+  });
+</script>
+</body>
+</html>
