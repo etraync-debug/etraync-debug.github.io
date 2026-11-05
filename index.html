@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Home Devices</title>
+
+<!-- Meta Ray-Ban Display (MRBD) web app metadata -->
+<meta name="description" content="Quick launcher for Google Home devices">
+<meta name="mrbd-web-app-capable" content="yes">
+<link rel="icon" type="image/png" sizes="128x128" href="icon.png">
+
+<style>
+  /* Additive display: black = transparent, so keep backgrounds black and elements bright */
+  :root { color-scheme: dark; }
+  html, body { margin: 0; height: 100%; background: #000; color: #fff;
+               font-family: system-ui, sans-serif; }
+  body { display: grid; place-items: center; }
+  main { width: 100%; max-width: 600px; padding: 24px; box-sizing: border-box;
+         text-align: center; }
+  h1 { font-size: 1.4rem; margin: 0 0 20px; font-weight: 600; }
+  a.btn { display: block; padding: 28px 16px; border: 3px solid transparent;
+          border-radius: 16px; background: #1a73e8; color: #fff;
+          font-size: 1.6rem; font-weight: 600; text-decoration: none; }
+  a.btn:hover { background: #1765cc; }
+  /* Visible focus ring for D-pad / Neural Band navigation */
+  a.btn:focus, a.btn:focus-visible { outline: none; border-color: #fff;
+          box-shadow: 0 0 0 4px #1a73e8; }
+  p { margin: 14px 0 0; font-size: 1rem; opacity: .8; min-height: 1.4em; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Home Devices</h1>
+  <!-- A plain link: the glasses focus it and a pinch/select activates it natively -->
+  <a id="open" class="btn" href="https://home.google.com/u/0/home/1-de833ee97658431af9c6b8bc40d151f39c5510f23f498b713a7b76aca789ee9e/devices">Open Home Devices</a>
+  <p id="msg"></p>
+</main>
+
+<script>
+  const link = document.getElementById("open");
+  const msg = document.getElementById("msg");
+  const W = 600, H = 600;
+
+  // Only desktop browsers (mouse + hover) get the 600x600 popup.
+  // On the glasses the link just navigates normally. No custom key or focus handlers,
+  // so the glasses' own spatial navigation and pinch activation work untouched.
+  const desktop = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+  if (desktop) {
+    msg.textContent = "Opens in a 600×600 window.";
+    link.addEventListener("click", (e) => {
+      const left = Math.round(window.screenX + (window.outerWidth - W) / 2);
+      const top = Math.round(window.screenY + (window.outerHeight - H) / 2);
+      const win = window.open(link.href, "homeDevices",
+        `popup=yes,width=${W},height=${H},left=${left},top=${top},resizable=yes,scrollbars=yes`);
+      if (win) { e.preventDefault(); win.focus(); }
+      // If the popup was blocked, the link falls through and opens in this tab.
+    });
+  }
+</script>
+</body>
+</html>
